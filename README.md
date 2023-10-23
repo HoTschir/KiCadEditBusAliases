@@ -1,7 +1,7 @@
 # KiCadEditBusAliases
 Simple tool for easy editing of Bus Aliases across hierarchical sheets.
 
-## installation
+## Installation
 * install python3
 * install kiutils
   ```
