@@ -19,9 +19,8 @@ Copy KiCadEditBusAliases.py to a directory, your PATH-variable points to.
   ```
   KiCadEditBusAliases.py <eeschema_file_name.kicad_sch>
   ```
-* Do the changes you want (see pictures below).
+* Do the changes you want (see pictures below). Don't forget to assign each and every Bus Alias to at least one file. Otherwise it will _not_ be saved.
 * Press "save and exit" to make changes permanent to *.kicad_sch files.
-  (Please keep in mind: If one Bus Alias is _not_ assigned to any file, it will _not_ be saved at all.)
 * Open your KiCad project and continue editing using eeschema.
 
 ## Screen shots
