@@ -1,5 +1,9 @@
 # KiCadEditBusAliases
-Simple tool for easy editing of Bus Aliases across hierarchical sheets.
+Simple tool for easy edit of Bus Aliases across hierarchical sheets.
+
+It is easy, because of
+* edit bus member names within a text-box (text-editor-like)
+* assign/remove Bus Aliases to/from sheet by tick/untick a checkbox
 
 ## Installation
 * install python3
