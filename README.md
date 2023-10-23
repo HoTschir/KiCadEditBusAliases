@@ -5,6 +5,8 @@ It is easy, because of
 * edit bus member names within a text-box (text-editor-like)
 * assign/remove Bus Aliases to/from sheet by tick/untick a checkbox
 
+Tested with: ![](https://img.shields.io/badge/V6-%20KiCad-blue)
+
 ## Installation
 * install python3
 * install kiutils
