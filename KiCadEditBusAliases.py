@@ -16,7 +16,8 @@
 #                       - remove debugging code
 #                       - new BusAlias-Button
 #  2023-10-23  v0.4   - - first published version
-#
+#  2023-10-24  v0.5   - - bugfix: in main window: member count not updated, when members-window is closed
+
 #
 #  Redistribution and use in source and binary forms, with or without
 #  modification, are permitted provided that the following conditions are
@@ -51,10 +52,10 @@ from tkinter import Tk, Label, Canvas, Button, Text, Frame, Checkbutton, Boolean
 from pathlib import Path
 import operator
 
-from tkinter import simpledialog 
+from tkinter import simpledialog
 
 from kiutils.schematic import Schematic       
-from kiutils.items.schitems import BusAlias  
+from kiutils.items.schitems import BusAlias   
 
 ListOfFilenames = []
 ListOfBusAliases = []
@@ -117,8 +118,11 @@ def LoadDatafromFile(fn):
   for ThisBusAlias in ThisSchematic.busAliases:
   
     if not any(x.name == ThisBusAlias.name for x in ListOfBusAliases):
+     
       ba = clBusAlias(ThisBusAlias.name)
+     
       ba.assignedto.append(fn)
+     
       for member in ThisBusAlias.members:
         ba.append_member(member)
       ListOfBusAliases.append(ba)
@@ -129,14 +133,19 @@ def LoadDatafromFile(fn):
         if not member in ba.members:
           ba.members.append(member)
 
+ 
   for HSheet in ThisSchematic.sheets:
     if not HSheet.fileName.value in ListOfFilenames:  
+                                                      
       if os.path.exists(HSheet.fileName.value):
         LoadDatafromFile(HSheet.fileName.value)
       else:
         print("File: "+HSheet.fileName.value+" not found, skipped")                                    
          
-def BusWindow(event, ba, posX, posY):
+def GetBaNameStr(ba):
+  return ba.name+" ("+str(len(ba.members))+")"
+  
+def BusWindow(event, canvas, text, ba, posX, posY):
 
   def save_member_changes(aliaslist):
     ba.members.clear()
@@ -144,6 +153,8 @@ def BusWindow(event, ba, posX, posY):
        if (alias != ""):
          ba.append_member(alias)
     top.destroy()
+    canvas.itemconfig(text, text=GetBaNameStr(ba))
+
 
   top = Toplevel()
   top.title("BusAlias: "+ba.name)
@@ -167,10 +178,12 @@ def BusWindow(event, ba, posX, posY):
     
      
 def saveBusaliases(): 
+ 
   for fn in ListOfFilenames:
     ThisSchematic = Schematic().from_file(fn)  
     ThisSchematic.busAliases.clear()
     ThisSchematic.to_file(fn)
+ 
   for ba in ListOfBusAliases:
     for fn in ba.assignedto:
       ThisSchematic = Schematic().from_file(fn)  
@@ -179,10 +192,10 @@ def saveBusaliases():
       ThisSchematic.to_file(fn)
  
     
-aw = 250            
-ah = 160         
-dw = 60            
-dh = 40            
+aw = 250             
+ah = 160             
+dw = 60              
+dh = 40              
 guiposX = 200
 guiposY = 80
 
@@ -208,16 +221,16 @@ def main(args):
   def createBusCanvas(parent, ba, nbr, posX, posY):
     h = ah-10
     w = dw-10
-    canvas = Canvas(parent, width = w, height = h) 
+    canvas = Canvas(parent, width = w, height = h)
     canvas.grid(row = 0, column = 0)
     canvas.place(x = aw+(dw)*nbr, y=20)
-    canvas.create_text(6, h-10, text = ba.name+" ("+str(len(ba.members))+")", angle = 80, anchor = "w",  fill = 'blue')  
-    canvas.bind("<Button-1>", lambda event: BusWindow(event, ba, posX, posY))
+    canvastxt = canvas.create_text(6, h-10, text = GetBaNameStr(ba), angle = 80, anchor = "w",  fill = 'blue')  
+    canvas.bind("<Button-1>", lambda event: BusWindow(event, canvas, canvastxt, ba, posX, posY))
       
   def createFileCanvas(parent, fn, nbr):
     h = dh-10
     w = aw-10
-    basisfn = Path(fn).stem  
+    basisfn = Path(fn).stem 
     canvas = Canvas(parent, width = w, height = h)
     canvas.grid(row = 0, column = 0)
     canvas.place(x = 20, y=ah+20+(dh)*nbr)
@@ -227,8 +240,10 @@ def main(args):
     matrix = Frame(parent)
     matrix.place(x=5, y=5, width=parent.winfo_width()-10, height=parent.winfo_height()-60)
     
+   
     i = 0
     for fn in  ListOfFilenames:
+     
       createFileCanvas(matrix, fn, i)
       k = 0
       for ba in  ListOfBusAliases:
@@ -240,19 +255,19 @@ def main(args):
     for ba in  ListOfBusAliases:
       createBusCanvas(matrix, ba, k, guiposX+parent.winfo_width()+10, guiposY)
       k += 1
-    
+   
     return matrix
       
   def NewBusAlias(parent, matrix, btn):
     ba_name =simpledialog.askstring("new Busalias", "Give the name of new BusAlias:", parent=parent) 
     if (ba_name != None):               
-      if (len(ba_name) > 0):           
+      if (len(ba_name) > 0):            
         ba = clBusAlias(ba_name)
         ListOfBusAliases.append(ba) 
         matrix.destroy()
         setGuiGeometry(parent, len(ListOfBusAliases), len(ListOfFilenames))
         matrix = createMatrix(parent) 
-        btn.tkraise()      
+        btn.tkraise()     
     return matrix
        
     
@@ -268,6 +283,9 @@ def main(args):
   ListOfFilenames.sort()      
   ListOfBusAliases.sort(key = operator.attrgetter('name'))
 
+ 
+  
+ 
   gui = Tk()
   gui.title("BusAliases of "+args[1])
   setGuiGeometry(gui, len(ListOfBusAliases), len(ListOfFilenames))
