@@ -6,9 +6,10 @@ It is easy, because of:
 * assign/remove Bus Aliases to/from sheet by tick/untick a checkbox
 
 It prevents you from ERC-error:
-```
-[bus_definition_conflict]: Bus alias NAME has conflicting definitions on file1.kicad_sch and file2.kicad_sch
-```
+  ```
+  [bus_definition_conflict]: Bus alias NAME has conflicting definitions on file1.kicad_sch and file2.kicad_sch
+  ```
+because of keeping the same bus members in alphabetical order for all assigned files.
 
 Tested with: ![](https://img.shields.io/badge/V6-%20KiCad-blue)
 
