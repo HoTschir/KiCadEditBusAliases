@@ -22,7 +22,7 @@ Tested with: ![](https://img.shields.io/badge/V6-%20KiCad-blue)
 Copy KiCadEditBusAliases.py to a directory, your PATH-variable points to.
 
 ## Usage
-* Close your KiCad project.
+* Close and _!backup!_ your KiCad project.
 * Pass root schematic file of your KiCad project as a parameter for the script.
   ```
   KiCadEditBusAliases.py <eeschema_file_name.kicad_sch>
