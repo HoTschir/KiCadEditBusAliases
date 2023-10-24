@@ -1,9 +1,14 @@
 # KiCadEditBusAliases
 Simple tool for easy edit of Bus Aliases across hierarchical sheets.
 
-It is easy, because of
+It is easy, because of:
 * edit bus member names within a text-box (text-editor-like)
 * assign/remove Bus Aliases to/from sheet by tick/untick a checkbox
+
+It prevents you from ERC-error:
+```
+[bus_definition_conflict]: Bus alias NAME has conflicting definitions on file1.kicad_sch and file2.kicad_sch
+```
 
 Tested with: ![](https://img.shields.io/badge/V6-%20KiCad-blue)
 
